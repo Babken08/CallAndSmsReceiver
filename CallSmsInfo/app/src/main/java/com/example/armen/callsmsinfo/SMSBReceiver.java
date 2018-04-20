@@ -1,5 +1,6 @@
 package com.example.armen.callsmsinfo;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,9 +11,11 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +36,19 @@ public class SMSBReceiver extends BroadcastReceiver {
                 SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) sms[i]);
                 String smsBody = smsMessage.getMessageBody().toString();
                 String address = smsMessage.getOriginatingAddress();
+                long smsData =  smsMessage.getTimestampMillis();
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy/HH:mm");
+                String d = formatter.format(Long.parseLong(String.valueOf(smsData)));
 
                 ModelSms modelSms = new ModelSms();
                 modelSms.setSmsBody(smsBody);
                 modelSms.setSmsAddress(address);
                 list.add(modelSms);
                 smsMessageStr += "SMS From: " + address + "\n";
-                smsMessageStr += "SMS Body"+smsBody + "\n";
+                smsMessageStr += "SMS Body "+smsBody + "\n";
+                smsMessageStr += "SMS Data "+ d + "\n";
             }
 
 

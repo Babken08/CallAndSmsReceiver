@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.provider.CallLog;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class CallReceiver extends BroadcastReceiver {
         int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
         int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
         sb.append("Call Details:\n\n");
-        while (managedCursor.moveToNext()) {
+        if (managedCursor.moveToFirst()) {
                 String phNumber = managedCursor.getString(number);
                 String callType = managedCursor.getString(type);
                 String callDate = managedCursor.getString(date);
@@ -90,11 +91,12 @@ public class CallReceiver extends BroadcastReceiver {
                 modelCall.setCallDuration(callDuration);
                 modelCall.setDateString(dateString);
                 list.add(modelCall);
+
 //                sb.append("\nPhoneNumber " + phNumber + " \nCallType " + dir + " \n CallDate " + dateString + " \nCallDuration " + callDuration);
 //                sb.append("\n***************");
             }
 
-            ModelCall m = list.get(list.size() -1);
+            ModelCall m = list.get(0);
         sb.append("\nPhoneNumber " + m.getPhNumber() + " \nCallType " + m.getDir() + " \n CallDate " + m.getDateString() + " \nCallDuration " + m.getCallDuration());
         managedCursor.close();
         return sb.toString();
